@@ -1,0 +1,5 @@
+.idea
+build
+.gradle
+.env
+.env.docker

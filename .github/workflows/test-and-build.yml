@@ -1,0 +1,37 @@
+name: Test and build
+on: push
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: "read"
+      id-token: "write"
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 21
+          cache: 'gradle'
+      - name: migrate test database
+        shell: bash
+        run: |
+          wget -qO- https://download.red-gate.com/maven/release/org/flywaydb/enterprise/flyway-commandline/9.22.3/flyway-commandline-9.22.3-linux-x64.tar.gz | tar -xvz && sudo ln -s `pwd`/flyway-9.22.3/flyway /usr/local/bin
+          psql --host localhost --username postgres < databases/create_databases.sql
+          /usr/local/bin/flyway -user=starter -password=starter -url="jdbc:postgresql://localhost:5432/starter_test" -locations=filesystem:databases/starter migrate
+      - name: test and build
+        run: |
+          ./gradlew build
+          docker build -t capstone-starter .

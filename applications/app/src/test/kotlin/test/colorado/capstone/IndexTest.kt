@@ -12,6 +12,7 @@ class IndexTest {
     @Test
     fun testIndex() = testApp {
         val response = client.get("/")
+        println("Response Status: ${response.status}")
 
         assertEquals(HttpStatusCode.OK, response.status)
         assertContains(response.bodyAsText(), "Capstone Starter")

@@ -13,6 +13,7 @@ dependencies {
 
     implementation("com.zaxxer:HikariCP:$hikariVersion")
     implementation("org.postgresql:postgresql:$postgresVersion")
+    
 
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
 }

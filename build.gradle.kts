@@ -18,6 +18,8 @@ subprojects {
     dependencies {
         implementation("ch.qos.logback:logback-classic:1.5.16")
         implementation("org.slf4j:slf4j-api:2.0.16")
+        implementation ("org.postgresql:postgresql:42.2.5")
+        implementation("com.google.cloud.sql:postgres-socket-factory:1.14.1")
 
         testImplementation(kotlin("test-junit"))
     }

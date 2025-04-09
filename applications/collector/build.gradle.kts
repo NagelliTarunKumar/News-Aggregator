@@ -1,17 +1,38 @@
-group = "edu.colorado.capstone"
+plugins {
+    kotlin("jvm") version "1.9.22"
+    application
+}
 
-task<JavaExec>("run") {
-    classpath = files(tasks.jar)
+group = "edu.colorado.capstone"
+version = "1.0"
+
+application {
+    mainClass.set("edu.colorado.capstone.collector.CollectorKt")
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation("io.ktor:ktor-server-core:2.3.7")
+    implementation("io.ktor:ktor-server-netty:2.3.7")
+    implementation("ch.qos.logback:logback-classic:1.4.11")
 }
 
 tasks {
     jar {
-        manifest { attributes("Main-Class" to "edu.colorado.capstone.collector.CollectorKt") }
+        manifest {
+            attributes["Main-Class"] = application.mainClass.get()
+        }
         duplicatesStrategy = DuplicatesStrategy.INCLUDE
         from({
             configurations.runtimeClasspath.get()
                 .filter { it.name.endsWith("jar") }
-                .map(::zipTree)
+                .map { zipTree(it) }
         })
+
+        archiveBaseName.set("collector")
+        archiveVersion.set("")
     }
 }

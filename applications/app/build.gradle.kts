@@ -1,3 +1,9 @@
+plugins {
+    kotlin("jvm") version "1.9.22"
+    application 
+}
+
+
 group = "edu.colorado.capstone"
 
 val ktorVersion: String by project
@@ -18,9 +24,9 @@ dependencies {
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
 }
 
-task<JavaExec>("run") {
-    classpath = files(tasks.jar)
-}
+// task<JavaExec>("run") {
+//     classpath = files(tasks.jar)
+// }
 
 tasks {
     jar {
@@ -33,3 +39,27 @@ tasks {
         })
     }
 }
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    kotlinOptions {
+        jvmTarget = "21"
+    }
+}
+// application {
+//     mainClass.set("edu.colorado.capstone.app.EmailConsumerKt")
+// }
+
+application {
+    mainClass.set("edu.colorado.capstone.app.AppKt")
+}
+
+
+
+
+

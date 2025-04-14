@@ -6,4 +6,5 @@ include(
     "applications:collector",
 
     "components:database-support",
+    "email-service",
 )

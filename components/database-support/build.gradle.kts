@@ -7,3 +7,15 @@ dependencies {
     testImplementation("org.postgresql:postgresql:$postgresVersion")
     implementation("com.google.cloud.sql:postgres-socket-factory:1.14.1")
 }
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    kotlinOptions {
+        jvmTarget = "21"
+    }
+}

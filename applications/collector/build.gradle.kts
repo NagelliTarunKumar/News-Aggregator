@@ -18,6 +18,34 @@ dependencies {
     implementation("io.ktor:ktor-server-core:2.3.7")
     implementation("io.ktor:ktor-server-netty:2.3.7")
     implementation("ch.qos.logback:logback-classic:1.4.11")
+
+
+        // Ktor Server dependencies
+    implementation("io.ktor:ktor-server-core:2.3.4")
+    implementation("io.ktor:ktor-server-netty:2.3.4")
+    implementation("io.ktor:ktor-server-call-logging:2.3.4")
+    implementation("ch.qos.logback:logback-classic:1.4.11")
+
+    // OkHttp for HTTP requests
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+
+    // Moshi for JSON parsing
+    implementation("com.squareup.moshi:moshi:1.15.0")
+    implementation("com.squareup.moshi:moshi-kotlin:1.15.0")
+
+
+    implementation("io.ktor:ktor-server-core:2.3.4")
+    implementation("io.ktor:ktor-server-netty:2.3.4")
+    implementation("io.ktor:ktor-server-content-negotiation:2.3.4")
+    implementation("io.ktor:ktor-serialization-gson:2.3.4")
+
+
+    implementation("redis.clients:jedis:5.1.0")
+    implementation("com.squareup.moshi:moshi:1.13.0")
+    implementation("com.squareup.moshi:moshi-kotlin:1.13.0")
+
+    testImplementation("io.ktor:ktor-server-tests:2.3.7")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.9.22")
 }
 
 tasks {
@@ -36,15 +64,14 @@ tasks {
         archiveVersion.set("")
     }
 }
-
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
+        languageVersion.set(JavaLanguageVersion.of(17))
     }
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     kotlinOptions {
-        jvmTarget = "21"
+        jvmTarget = "17"
     }
 }

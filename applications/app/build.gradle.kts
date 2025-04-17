@@ -20,12 +20,14 @@ dependencies {
 }
 
 plugins {
+    kotlin("jvm") version "2.0.0-RC1"
+    application
     kotlin("plugin.serialization") version "2.0.0-RC1"
 }
 
-task<JavaExec>("run") {
-    classpath = files(tasks.jar)
-}
+//task<JavaExec>("run") {
+//    classpath = files(tasks.jar)
+//}
 
 tasks {
     jar {

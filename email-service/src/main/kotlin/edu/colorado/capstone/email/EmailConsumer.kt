@@ -46,7 +46,7 @@ fun sendEmail(job: EmailJob) {
             setFrom(InternetAddress(username))
             setRecipients(Message.RecipientType.TO, InternetAddress.parse(job.email))
             subject = job.subject
-            setText(job.body)
+            setContent(job.htmlContent, "text/html; charset=utf-8")
         }
         Transport.send(message)
         println("✅ Email sent to ${job.email}")

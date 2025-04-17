@@ -7,12 +7,19 @@ import kotlin.time.Duration.Companion.days
 fun startDailyEmailScheduler() {
     CoroutineScope(Dispatchers.Default).launch {
         while (true) {
-            val job = EmailJob(
+            val generalArticles = fetchNewsArticles() // fetches all general news
+            val subscribedTopics = listOf("finance", "sports", "fashion", "technology", "politics") 
+
+            val htmlContent = generateCustomNewsHtml(generalArticles, subscribedTopics)
+
+            val emailJob = EmailJob(
                 email = "vishnumahajan33@gmail.com",
-                subject = "🕒 Scheduled Capstone Email",
-                body = "This is your daily update at ${LocalDateTime.now()}!"
+                subject = "🗞️ Daily News ",
+                body = "Here's your daily summary of Top News.",
+                topic = "Daily News",
+                htmlContent = htmlContent
             )
-            sendEmailJob(job)
+            sendEmailJob(emailJob)
             delay(1.days)
         }
     }

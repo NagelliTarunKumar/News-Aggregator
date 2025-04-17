@@ -49,8 +49,8 @@ The Capstone Starter consists of three applications communicating with one Postg
     ```shell
     ./gradlew build
     java -jar applications/collector/build/libs/collector.jar
-    java -jar applications/collector/build/libs/analyzer.jar
-    java -jar applications/collector/build/libs/app.jar
+    java -jar applications/analyzer/build/libs/analyzer.jar
+    java -jar applications/app/build/libs/app.jar
     ```
 
 ## Create a database schema migration

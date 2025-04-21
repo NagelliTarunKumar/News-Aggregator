@@ -8,10 +8,11 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 import kotlinx.serialization.Serializable
+import javax.annotation.Nonnull
 
 // Assuming a Session and DB access setup
 @Serializable
-data class UserSession(val email: String)
+data class UserSession(@Nonnull val email: String)
 
 fun Routing.index(databaseTemplate: DatabaseTemplate) {
     get("/") {
@@ -19,12 +20,62 @@ fun Routing.index(databaseTemplate: DatabaseTemplate) {
         val userSession = call.sessions.get<UserSession>()
         if (userSession != null) {
             // User is logged in
-            call.respond("Welcome user with ID: ${userSession.email}")
+
+            // get user's news subscriptions
+            val userData: Map<String, Any?>? = databaseTemplate.query(
+                "SELECT * FROM users WHERE email = ?",
+                parameters = { stmt -> stmt.setString(1, userSession.email) },
+                results = { rs ->
+                    val meta = rs.metaData
+                    val columnCount = meta.columnCount
+                    buildMap {
+                        for (i in 4..columnCount) {
+                            val columnName = meta.getColumnLabel(i)
+                            put(columnName, rs.getBoolean(i))
+                        }
+                    }
+                }
+            )
+
+            call.respond(FreeMarkerContent(
+                "index.ftl",
+                mapOf("email" to userSession.email,
+                    "finance" to userData?.get("finance"),
+                    "sports" to userData?.get("sports"),
+                    "fashion" to userData?.get("fashion"),
+                    "technology" to userData?.get("technology"),
+                    "politics" to userData?.get("politics"))))
+//            call.respond("Welcome user with ID: ${userSession.email}")
 //            call.respond(FreeMarkerContent("index.ftl", emptyMap<String, String>()))
         } else {
             // User is not logged in
             call.respondRedirect("/register")
         }
+    }
+
+    post("/update") {
+        val params = call.receiveParameters()
+        val finance = params["finance"] != null
+        val sports = params["sports"] != null
+        val fashion = params["fashion"] != null
+        val technology = params["technology"] != null
+        val politics = params["politics"] != null
+
+        // Insert new user
+        databaseTemplate.execute(
+            "UPDATE users SET finance = ?, sports = ?, fashion = ?, technology = ?, politics = ? WHERE email = ?",
+            parameters = { stmt ->
+                stmt.setBoolean(1, finance)
+                stmt.setBoolean(2, sports)
+                stmt.setBoolean(3, fashion)
+                stmt.setBoolean(4, technology)
+                stmt.setBoolean(5, politics)
+                stmt.setString(6, call.sessions.get<UserSession>()!!.email)
+            },
+            results = { it -> true } // Just return true to indicate success
+        )
+
+        call.respondRedirect("/")
     }
 
     get("/login") {

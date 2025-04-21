@@ -11,6 +11,7 @@ import kotlin.test.assertEquals
 class IndexTest {
     @Test
     fun testIndex() = testApp {
+        client.post("login", )
         //TODO rewrite this test to login before trying to access "/"
 //        val response = client.get("/")
 //        println("Response Status: ${response.status}")

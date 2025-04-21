@@ -1,9 +1,3 @@
-plugins {
-    kotlin("jvm") version "1.9.22"
-    application 
-}
-
-
 group = "edu.colorado.capstone"
 
 val ktorVersion: String by project
@@ -16,6 +10,7 @@ dependencies {
     implementation("io.ktor:ktor-server-core-jvm:$ktorVersion")
     implementation("io.ktor:ktor-server-freemarker-jvm:$ktorVersion")
     implementation("io.ktor:ktor-server-netty-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-sessions:$ktorVersion")
 
     implementation("com.zaxxer:HikariCP:$hikariVersion")
     implementation("org.postgresql:postgresql:$postgresVersion")
@@ -24,9 +19,15 @@ dependencies {
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
 }
 
-// task<JavaExec>("run") {
-//     classpath = files(tasks.jar)
-// }
+plugins {
+    kotlin("jvm") version "2.0.0-RC1"
+    application
+    kotlin("plugin.serialization") version "2.0.0-RC1"
+}
+
+//task<JavaExec>("run") {
+//    classpath = files(tasks.jar)
+//}
 
 tasks {
     jar {

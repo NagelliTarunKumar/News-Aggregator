@@ -9,6 +9,7 @@ import io.ktor.server.freemarker.*
 import io.ktor.server.http.content.*
 import io.ktor.server.netty.*
 import io.ktor.server.routing.*
+import io.ktor.server.sessions.*
 
 fun Application.configured(
     databaseUrl: String,
@@ -21,7 +22,7 @@ fun Application.configured(
     val databaseTemplate = DatabaseTemplate(dataSource)
 
     routing {
-        index()
+        index(databaseTemplate)
         health(databaseTemplate)
 
         staticResources("/static/styles", "static/styles")
@@ -33,6 +34,10 @@ fun Application.module() {
     val databaseUrl = requiredEnvironmentVariable("DATABASE_URL")
 
     configured(databaseUrl)
+
+    install(Sessions) {
+        cookie<UserSession>("user_session")
+    }
 }
 
 fun main() {

@@ -30,3 +30,4 @@ GRANT USAGE, CREATE ON SCHEMA public TO starter;
 
 \connect starter_test
 GRANT USAGE, CREATE ON SCHEMA public TO starter;
+

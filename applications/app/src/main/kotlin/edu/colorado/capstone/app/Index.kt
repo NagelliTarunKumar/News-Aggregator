@@ -9,19 +9,30 @@ import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 import kotlinx.serialization.Serializable
 import javax.annotation.Nonnull
+import java.util.concurrent.Executors
 
-// Assuming a Session and DB access setup
 @Serializable
 data class UserSession(@Nonnull val email: String)
 
 fun Routing.index(databaseTemplate: DatabaseTemplate) {
+    val newsService = NewsService()
+    val executor = Executors.newCachedThreadPool()
+
     get("/") {
-        // Check if user is logged in by verifying the session
         val userSession = call.sessions.get<UserSession>()
         if (userSession != null) {
-            // User is logged in
+            // ✅ Fetch top stories
+            val topStories = try {
+                val future = executor.submit<List<NewsItem>> {
+                    newsService.getTopStories()
+                }
+                future.get()
+            } catch (e: Exception) {
+                println("Error fetching top stories: ${e.message}")
+                emptyList()
+            }
 
-            // get user's news subscriptions
+            // ✅ Fetch user topic preferences
             val userData: Map<String, Any?>? = databaseTemplate.query(
                 "SELECT * FROM users WHERE email = ?",
                 parameters = { stmt -> stmt.setString(1, userSession.email) },
@@ -29,7 +40,7 @@ fun Routing.index(databaseTemplate: DatabaseTemplate) {
                     val meta = rs.metaData
                     val columnCount = meta.columnCount
                     buildMap {
-                        for (i in 4..columnCount) {
+                        for (i in 2..columnCount) {
                             val columnName = meta.getColumnLabel(i)
                             put(columnName, rs.getBoolean(i))
                         }
@@ -37,18 +48,38 @@ fun Routing.index(databaseTemplate: DatabaseTemplate) {
                 }
             )
 
+            // ✅ Fetch personalized news
+            val newsMap = mutableMapOf<String, List<NewsItem>>()
+            listOf("finance", "sports", "fashion", "technology", "politics").forEach { topic ->
+                if (userData?.get(topic) == true) {
+                    val news = try {
+                        val future = executor.submit<List<NewsItem>> {
+                            newsService.getNewsForTopic(topic)
+                        }
+                        future.get()
+                    } catch (e: Exception) {
+                        println("Error fetching news for topic $topic: ${e.message}")
+                        emptyList()
+                    }
+                    newsMap[topic] = news
+                }
+            }
+
+            // ✅ Render homepage with all data
             call.respond(FreeMarkerContent(
                 "index.ftl",
-                mapOf("email" to userSession.email,
+                mapOf(
+                    "email" to userSession.email,
                     "finance" to userData?.get("finance"),
                     "sports" to userData?.get("sports"),
                     "fashion" to userData?.get("fashion"),
                     "technology" to userData?.get("technology"),
-                    "politics" to userData?.get("politics"))))
-//            call.respond("Welcome user with ID: ${userSession.email}")
-//            call.respond(FreeMarkerContent("index.ftl", emptyMap<String, String>()))
+                    "politics" to userData?.get("politics"),
+                    "newsMap" to newsMap,
+                    "topStories" to topStories
+                )
+            ))
         } else {
-            // User is not logged in
             call.respondRedirect("/register")
         }
     }
@@ -61,7 +92,6 @@ fun Routing.index(databaseTemplate: DatabaseTemplate) {
         val technology = params["technology"] != null
         val politics = params["politics"] != null
 
-        // Insert new user
         databaseTemplate.execute(
             "UPDATE users SET finance = ?, sports = ?, fashion = ?, technology = ?, politics = ? WHERE email = ?",
             parameters = { stmt ->
@@ -72,18 +102,13 @@ fun Routing.index(databaseTemplate: DatabaseTemplate) {
                 stmt.setBoolean(5, politics)
                 stmt.setString(6, call.sessions.get<UserSession>()!!.email)
             },
-            results = { it -> true } // Just return true to indicate success
+            results = { it -> true }
         )
 
         call.respondRedirect("/")
     }
 
     get("/login") {
-        // TODO uncomment when tests work
-//        if (call.sessions.get<UserSession>() != null) {
-//            call.respondRedirect("/")
-//        }
-
         call.respond(FreeMarkerContent("login.ftl", emptyMap<String, String>()))
     }
 
@@ -109,20 +134,13 @@ fun Routing.index(databaseTemplate: DatabaseTemplate) {
         }
     }
 
-    get("register") {
-        // TODO uncomment when tests work
-//        if (call.sessions.get<UserSession>() != null) {
-//            call.respondRedirect("/")
-//        }
-
+    get("/register") {
         call.respond(FreeMarkerContent("register.ftl", emptyMap<String, String>()))
     }
 
     post("/register") {
         val params = call.receiveParameters()
         val email = params["email"]
-
-
 
         if (email != null) {
             val userExists = databaseTemplate.query(
@@ -132,18 +150,16 @@ fun Routing.index(databaseTemplate: DatabaseTemplate) {
             ) ?: false
 
             if (!userExists) {
-                // Insert new user
                 databaseTemplate.execute(
                     "INSERT INTO users (email) VALUES (?)",
                     parameters = { stmt ->
                         stmt.setString(1, email)
                     },
-                    results = { it -> true } // Just return true to indicate success
+                    results = { it -> true }
                 )
                 call.sessions.set(UserSession(email))
                 call.respondRedirect("/")
-            }
-            else {
+            } else {
                 call.respond(HttpStatusCode.BadRequest, "Email already exists.")
                 call.respondRedirect("/register")
             }

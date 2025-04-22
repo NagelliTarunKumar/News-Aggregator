@@ -7,4 +7,5 @@ include(
 
     "components:database-support",
     "email-service",
+    "trending-words"
 )

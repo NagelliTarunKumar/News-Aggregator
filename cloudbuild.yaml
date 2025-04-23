@@ -2,20 +2,11 @@ options:
   logging: CLOUD_LOGGING_ONLY
 
 steps:
-  # 1. Build the JAR using JDK 21 and Gradle
-  - name: 'eclipse-temurin:21'
-    id: 'Build JAR'
+  # 1. Build the JAR
+  - name: 'gradle:8.2.1-jdk17'
     dir: 'applications/app'
-    entrypoint: 'bash'
-    args:
-      - -c
-      - |
-        apt-get update && apt-get install -y wget unzip
-        wget https://services.gradle.org/distributions/gradle-8.5-bin.zip
-        unzip gradle-8.5-bin.zip
-        export PATH=$PATH:$(pwd)/gradle-8.5/bin
-        gradle --version
-        gradle clean shadowJar --no-daemon
+    entrypoint: 'gradle'
+    args: ['clean', 'shadowJar', '--no-daemon']
 
   # 2. Build the Docker image and tag with commit SHA
   - name: 'gcr.io/cloud-builders/docker'

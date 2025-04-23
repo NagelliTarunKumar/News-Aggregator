@@ -6,13 +6,13 @@ plugins {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17)) // or 21, just make sure it's consistent and supported
+        languageVersion.set(JavaLanguageVersion.of(21)) // or 21, just make sure it's consistent and supported
     }
 }
 
 kotlin {
     jvmToolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
+        languageVersion.set(JavaLanguageVersion.of(21))
     }
 }
 

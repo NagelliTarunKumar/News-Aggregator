@@ -1,3 +1,4 @@
+// ✅ Final version of Index.kt with all changes integrated
 package edu.colorado.capstone.app
 
 import io.initialcapacity.database.DatabaseTemplate
@@ -8,8 +9,11 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonElement
 import javax.annotation.Nonnull
 import java.util.concurrent.Executors
+import io.ktor.server.application.call
+
 
 @Serializable
 data class UserSession(@Nonnull val email: String)
@@ -21,7 +25,6 @@ fun Routing.index(databaseTemplate: DatabaseTemplate) {
     get("/") {
         val userSession = call.sessions.get<UserSession>()
         if (userSession != null) {
-            // ✅ Fetch top stories
             val topStories = try {
                 val future = executor.submit<List<NewsItem>> {
                     newsService.getTopStories()
@@ -32,7 +35,6 @@ fun Routing.index(databaseTemplate: DatabaseTemplate) {
                 emptyList()
             }
 
-            // ✅ Fetch user topic preferences
             val userData: Map<String, Any?>? = databaseTemplate.query(
                 "SELECT * FROM users WHERE email = ?",
                 parameters = { stmt -> stmt.setString(1, userSession.email) },
@@ -48,24 +50,22 @@ fun Routing.index(databaseTemplate: DatabaseTemplate) {
                 }
             )
 
-            // ✅ Fetch personalized news
-            val newsMap = mutableMapOf<String, List<NewsItem>>()
+            val newsMap = mutableMapOf<String, JsonElement>()
             listOf("finance", "sports", "fashion", "technology", "politics").forEach { topic ->
                 if (userData?.get(topic) == true) {
                     val news = try {
-                        val future = executor.submit<List<NewsItem>> {
-                            newsService.getNewsForTopic(topic)
+                        val future = executor.submit<JsonElement> {
+                            newsService.getCategorizedNewsForTopic(topic)
                         }
                         future.get()
                     } catch (e: Exception) {
                         println("Error fetching news for topic $topic: ${e.message}")
-                        emptyList()
+                        kotlinx.serialization.json.JsonObject(emptyMap())
                     }
                     newsMap[topic] = news
                 }
             }
 
-            // ✅ Render homepage with all data
             call.respond(FreeMarkerContent(
                 "index.ftl",
                 mapOf(
@@ -102,7 +102,7 @@ fun Routing.index(databaseTemplate: DatabaseTemplate) {
                 stmt.setBoolean(5, politics)
                 stmt.setString(6, call.sessions.get<UserSession>()!!.email)
             },
-            results = { it -> true }
+            results = { true }
         )
 
         call.respondRedirect("/")
@@ -152,10 +152,8 @@ fun Routing.index(databaseTemplate: DatabaseTemplate) {
             if (!userExists) {
                 databaseTemplate.execute(
                     "INSERT INTO users (email) VALUES (?)",
-                    parameters = { stmt ->
-                        stmt.setString(1, email)
-                    },
-                    results = { it -> true }
+                    parameters = { stmt -> stmt.setString(1, email) },
+                    results = { true }
                 )
                 call.sessions.set(UserSession(email))
                 call.respondRedirect("/")

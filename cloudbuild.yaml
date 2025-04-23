@@ -2,7 +2,13 @@ options:
   logging: CLOUD_LOGGING_ONLY
 
 steps:
-  # 1. Build the Docker image and tag with commit SHA
+  # 1. Build the JAR
+  - name: 'gradle:8.2.1-jdk17'
+    dir: 'applications/app'
+    entrypoint: 'gradle'
+    args: ['clean', 'shadowJar', '--no-daemon']
+
+  # 2. Build the Docker image and tag with commit SHA
   - name: 'gcr.io/cloud-builders/docker'
     dir: 'applications/app'
     args: [

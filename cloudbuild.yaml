@@ -2,34 +2,43 @@ options:
   logging: CLOUD_LOGGING_ONLY
 
 steps:
-  # 1. Build the JAR
-  - name: 'gradle:8.2.1-jdk17'
+  # 1. Build the JAR using JDK 21 and Gradle (no Shadow)
+  - name: 'eclipse-temurin:21'
+    id: 'Build JAR'
     dir: 'applications/app'
-    entrypoint: 'gradle'
-    args: ['clean', 'shadowJar', '--no-daemon']
+    entrypoint: 'bash'
+    args:
+      - -c
+      - |
+        apt-get update && apt-get install -y wget unzip
+        wget https://services.gradle.org/distributions/gradle-8.5-bin.zip
+        unzip gradle-8.5-bin.zip
+        export PATH=$PATH:$(pwd)/gradle-8.5/bin
+        gradle --version
+        gradle clean build --no-daemon
 
   # 2. Build the Docker image and tag with commit SHA
   - name: 'gcr.io/cloud-builders/docker'
     dir: 'applications/app'
     args: [
       'build', '-t',
-      'us-central1-docker.pkg.dev/s25-fse-team9/app-images/kotlin-app:$SHORT_SHA',
+      'us-central1-docker.pkg.dev/$PROJECT_ID/app-images/kotlin-app:$SHORT_SHA',
       '.'
     ]
 
-  # 2. Push the Docker image to Artifact Registry
+  # 3. Push the Docker image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'push',
-      'us-central1-docker.pkg.dev/s25-fse-team9/app-images/kotlin-app:$SHORT_SHA'
+      'us-central1-docker.pkg.dev/$PROJECT_ID/app-images/kotlin-app:$SHORT_SHA'
     ]
 
-  # 3. Deploy to Cloud Run
+  # 4. Deploy to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     args:
       [
         'gcloud', 'run', 'deploy', 'kotlin-app',
-        '--image', 'us-central1-docker.pkg.dev/s25-fse-team9/app-images/kotlin-app:$SHORT_SHA',
+        '--image', 'us-central1-docker.pkg.dev/$PROJECT_ID/app-images/kotlin-app:$SHORT_SHA',
         '--region', 'us-central1',
         '--platform', 'managed',
         '--allow-unauthenticated',
@@ -40,5 +49,5 @@ steps:
 
 availableSecrets:
   secretManager:
-    - versionName: projects/s25-fse-team9/secrets/DB_PASS/versions/latest
+    - versionName: projects/$PROJECT_ID/secrets/DB_PASS/versions/latest
       env: 'DB_PASS'

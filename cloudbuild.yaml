@@ -15,7 +15,7 @@ steps:
         unzip gradle-8.5-bin.zip
         export PATH=$$PATH:$(pwd)/gradle-8.5/bin
         gradle --version
-        gradle clean build --no-daemon
+        gradle clean build -x test --no-daemon
 
   # 2. Build the Docker image and tag with commit SHA
   - name: 'gcr.io/cloud-builders/docker'

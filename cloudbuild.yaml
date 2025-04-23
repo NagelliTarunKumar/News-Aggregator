@@ -1,0 +1,41 @@
+steps:
+  # 1. Build the JAR
+  - name: 'gradle:8.2.1-jdk21'
+    dir: 'applications/app'
+    entrypoint: 'gradle'
+    args: ['clean', 'shadowJar', '--no-daemon']
+
+  # 2. Build the Docker image and tag with commit SHA
+  - name: 'gcr.io/cloud-builders/docker'
+    dir: 'applications/app'
+    args: [
+      'build', '-t',
+      'us-central1-docker.pkg.dev/$PROJECT_ID/app-images/kotlin-app:$SHORT_SHA',
+      '.'
+    ]
+
+  # 3. Push the Docker image to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'push',
+      'us-central1-docker.pkg.dev/$PROJECT_ID/app-images/kotlin-app:$SHORT_SHA'
+    ]
+
+  # 4. Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    args:
+      [
+        'gcloud', 'run', 'deploy', 'kotlin-app',
+        '--image', 'us-central1-docker.pkg.dev/$PROJECT_ID/app-images/kotlin-app:$SHORT_SHA',
+        '--region', 'us-central1',
+        '--platform', 'managed',
+        '--allow-unauthenticated',
+        '--add-cloudsql-instances', 's25-fse-team9:us-central1:gcp-cloud-starter',
+        '--set-env-vars', 'DB_USER=starter,DB_PASS=$(DB_PASS),DATABASE_URL=jdbc:postgresql:///starter_development?cloudSqlInstance=s25-fse-team9:us-central1:gcp-cloud-starter&socketFactory=com.google.cloud.sql.postgres.SocketFactory&user=$(DB_USER)&password=$(DB_PASS)'
+      ]
+    secretEnv: ['DB_PASS']
+
+availableSecrets:
+  secretManager:
+    - versionName: projects/$PROJECT_ID/secrets/DB_PASS/versions/latest
+      env: 'DB_PASS'

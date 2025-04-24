@@ -42,6 +42,7 @@ steps:
         '--region', 'us-central1',
         '--platform', 'managed',
         '--allow-unauthenticated',
+        '--memory', '4Gi',
         '--add-cloudsql-instances', 's25-fse-team9:us-central1:gcp-cloud-starter',
         '--set-env-vars', 'DB_USER=starter,DB_PASS=starter,DATABASE_URL=jdbc:postgresql:///starter_development?cloudSqlInstance=s25-fse-team9:us-central1:gcp-cloud-starter&socketFactory=com.google.cloud.sql.postgres.SocketFactory&user=starter&password=starter'
       ]

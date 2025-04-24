@@ -16,7 +16,7 @@ The Capstone Starter consists of three applications communicating with one Postg
 
 1.  The data collector is a background process that collects data from one or more sources.
 1.  The data analyzer is another background process that processes collected data.
-1.  The web application displays results to the user..
+1.  The web application displays results to the user...
 
 [Architecture Diagram](./images/Application_Architecture_Diagram.png)
 

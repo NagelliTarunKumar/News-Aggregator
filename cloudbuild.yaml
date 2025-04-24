@@ -33,7 +33,7 @@ steps:
       'us-central1-docker.pkg.dev/$PROJECT_ID/app-images/kotlin-app:$SHORT_SHA'
     ]
 
-  # 4. Deploy to Cloud Run
+  # 4. Deploy to Cloud Run with improved environment variable handling
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     args:
       [
@@ -43,7 +43,9 @@ steps:
         '--platform', 'managed',
         '--allow-unauthenticated',
         '--add-cloudsql-instances', 's25-fse-team9:us-central1:gcp-cloud-starter',
-        '--set-env-vars', 'DB_USER=starter,DB_PASS=$(DB_PASS),DATABASE_URL=jdbc:postgresql:///starter_development?cloudSqlInstance=s25-fse-team9:us-central1:gcp-cloud-starter&socketFactory=com.google.cloud.sql.postgres.SocketFactory&user=starter&password=$(DB_PASS)'
+        '--set-env-vars', 'DB_USER=starter',
+        '--set-env-vars', 'DB_PASS=${DB_PASS}',
+        '--set-env-vars', 'DATABASE_URL=jdbc:postgresql:///starter_development?cloudSqlInstance=s25-fse-team9:us-central1:gcp-cloud-starter&socketFactory=com.google.cloud.sql.postgres.SocketFactory&user=starter&password=${DB_PASS}'
       ]
     secretEnv: ['DB_PASS']
 

@@ -43,7 +43,7 @@ steps:
         '--platform', 'managed',
         '--allow-unauthenticated',
         '--add-cloudsql-instances', 's25-fse-team9:us-central1:gcp-cloud-starter',
-        '--set-env-vars', 'DB_USER=starter,DB_PASS=$(DB_PASS),DATABASE_URL=jdbc:postgresql:///starter_development?cloudSqlInstance=s25-fse-team9:us-central1:gcp-cloud-starter&socketFactory=com.google.cloud.sql.postgres.SocketFactory&user=$(DB_USER)&password=$(DB_PASS)'
+        '--set-env-vars', 'DB_USER=starter,DB_PASS=$(DB_PASS),DATABASE_URL=jdbc:postgresql:///starter_development?cloudSqlInstance=s25-fse-team9:us-central1:gcp-cloud-starter&socketFactory=com.google.cloud.sql.postgres.SocketFactory&user=starter&password=$(DB_PASS)'
       ]
     secretEnv: ['DB_PASS']
 

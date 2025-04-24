@@ -41,7 +41,7 @@ fun Application.module() {
 }
 
 fun main() {
-    val port = optionalEnvironmentVariable("PORT", "8888")
+    val port = optionalEnvironmentVariable("PORT", "8080")
     embeddedServer(Netty, port = port.toInt(), host = "0.0.0.0", module = { module() })
         .start(wait = true)
 }

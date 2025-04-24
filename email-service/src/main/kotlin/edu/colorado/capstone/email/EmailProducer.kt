@@ -37,7 +37,7 @@ fun sendEmailJob(emailJob: EmailJob) {
 fun fetchNewsArticles(): List<NewsArticle> {
     val client = OkHttpClient()
     val request = Request.Builder()
-        .url("https://collector-app-573036605406.us-central1.run.app/news")
+        .url("https://collector-service-848125970118.us-central1.run.app/news")
         .build()
 
     client.newCall(request).execute().use { response ->
@@ -76,7 +76,7 @@ fun generateNewsHtml(articles: List<NewsArticle>): String {
 fun fetchNewsArticlesByTopic(topic: String, limit: Int = 3): List<NewsArticle> {
     val client = OkHttpClient()
     val request = Request.Builder()
-        .url("https://collector-app-573036605406.us-central1.run.app/search?topic=$topic")
+        .url("https://collector-service-848125970118.us-central1.run.app/search?topic=$topic")
         .build()
 
     client.newCall(request).execute().use { response ->

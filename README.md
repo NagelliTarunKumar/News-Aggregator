@@ -2,7 +2,7 @@
 
 A capstone starter application.
 
-[Deployment on Google Cloud](https://capstone-service-573036605406.us-central1.run.app/)
+[Deployment on Google Cloud](https://collector-service-848125970118.us-central1.run.app/)
 
 ## Technology stack
 

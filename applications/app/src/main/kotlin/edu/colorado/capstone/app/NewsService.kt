@@ -37,7 +37,7 @@ class NewsService {
         }
 
         return@runBlocking try {
-            val response: HttpResponse = client.get("https://collector-service-848125970118.us-central1.run.app/news")
+            val response: HttpResponse = client.get("https://collector-app-573036605406.us-central1.run.app/news")
             val jsonString = response.bodyAsText()
             val articles = Json { ignoreUnknownKeys = true }
                 .decodeFromString<List<NewsItem>>(jsonString)
@@ -51,7 +51,7 @@ class NewsService {
     }
 
     fun getCategorizedNewsForTopic(topic: String): JsonElement = runBlocking {
-    val url = "https://collector-service-848125970118.us-central1.run.app/search?topic=$topic"
+    val url = "https://collector-app-573036605406.us-central1.run.app/search?topic=$topic"
 
     val client = HttpClient(CIO) {
         install(ContentNegotiation) { json() }

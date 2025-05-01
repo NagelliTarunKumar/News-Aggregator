@@ -1,1 +1,58 @@
+options:
+  logging: CLOUD_LOGGING_ONLY
 
+steps: 
+  # Step 1: Build Docker image and tag it as 'latest'
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'build',
+      '-t', 'us-central1-docker.pkg.dev/fseassignment4/fse4/collector-service:latest',
+      '-f', 'applications/collector/Dockerfile',
+      '.'
+    ]
+    dir: '.'  # Ensures full repo context for Docker build
+
+  # Step 2: Push the image to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/fseassignment4/fse4/collector-service:latest']
+
+  # Step 3: Check if Redis instance exists, create it only if it doesn't
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        # Check if Redis instance exists
+        if ! gcloud redis instances describe collector-redis --region=us-central1 >/dev/null 2>&1; then
+          echo "Creating Redis instance..."
+          gcloud redis instances create collector-redis \
+            --size=1 \
+            --region=us-central1
+        else
+          echo "Redis instance already exists, skipping creation."
+        fi
+
+  # Step 4: Get the Redis instance endpoint
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args: [
+      'redis', 'instances', 'describe', 'collector-redis',
+      '--region', 'us-central1',
+      '--format', 'value(host)'
+    ]
+    id: 'get-redis-endpoint'
+
+  # Step 5: Deploy the Cloud Run service with the Redis endpoint as environment variables
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args: [
+      'run', 'deploy', 'collector-service',
+      '--image', 'us-central1-docker.pkg.dev/fseassignment4/fse4/collector-service:latest',
+      '--region', 'us-central1',
+      '--platform', 'managed',
+      '--allow-unauthenticated',
+      '--set-env-vars', 'REDIS_HOST=$(get-redis-endpoint),REDIS_PORT=6379'
+    ]
+
+images:
+  - 'us-central1-docker.pkg.dev/fseassignment4/fse4/collector-service:latest'

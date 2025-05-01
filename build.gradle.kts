@@ -1,10 +1,7 @@
-/*plugins {
-    kotlin("jvm") version "2.0.0-RC1"
-}*/
 plugins {
-    kotlin("jvm") version "1.9.22"
-    application
+    kotlin("jvm") version "2.0.0-RC1"
 }
+
 
 repositories {
     mavenCentral()

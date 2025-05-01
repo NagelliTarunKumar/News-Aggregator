@@ -28,10 +28,7 @@ subprojects {
         testImplementation(kotlin("test-junit"))
     }
 }
-test {
-    minHeapSize = "512m"
-    maxHeapSize = "8192m" // 8 GB
-}
+
 java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(21))

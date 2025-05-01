@@ -21,8 +21,6 @@ dependencies {
     implementation("com.squareup.moshi:moshi:1.15.0")
     implementation("com.squareup.moshi:moshi-kotlin:1.15.0")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-
-
 }
 
 java {
@@ -40,6 +38,11 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 application {
     mainClass.set("edu.colorado.capstone.email.MainKt")
 }
-plugins {
-    kotlin("jvm") version "2.0.0-RC1"
+
+kotlin {
+    jvm {
+        compilerOptions {
+            freeCompilerArgs = listOf("-Xopt-in=kotlin.RequiresOptIn")
+        }
+    }
 }

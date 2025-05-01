@@ -30,19 +30,13 @@ java {
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-    kotlinOptions {
-        jvmTarget = "21"
+    kotlin {
+        compilerOptions {
+            jvmTarget.set("21")
+        }
     }
 }
 
 application {
     mainClass.set("edu.colorado.capstone.email.MainKt")
-}
-
-kotlin {
-    jvm {
-        compilerOptions {
-            freeCompilerArgs = listOf("-Xopt-in=kotlin.RequiresOptIn")
-        }
-    }
 }

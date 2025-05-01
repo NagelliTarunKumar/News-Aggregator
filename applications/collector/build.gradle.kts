@@ -1,7 +1,11 @@
-plugins {
+/*plugins {
     kotlin("jvm") version "1.9.22"
     application
+}*/
+plugins {
+    kotlin("jvm") version "2.0.0-RC1"
 }
+
 
 group = "edu.colorado.capstone" 
 version = "1.0"

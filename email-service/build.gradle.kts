@@ -23,20 +23,6 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 }
 
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
-    }
-}
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-    kotlin {
-        compilerOptions {
-            jvmTarget.set("21")
-        }
-    }
-}
-
 application {
     mainClass.set("edu.colorado.capstone.email.MainKt")
 }

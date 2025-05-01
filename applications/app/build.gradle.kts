@@ -55,7 +55,7 @@ tasks {
     }
 }
 
-java {
+/* java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(21))
     }
@@ -66,6 +66,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
         jvmTarget = "21"
     }
 }
+*/
 // application {
 //     mainClass.set("edu.colorado.capstone.app.EmailConsumerKt")
 // }

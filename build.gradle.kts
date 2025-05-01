@@ -6,9 +6,10 @@
 repositories {
     mavenCentral()
 }
-test {
-    jvmArgs '-Xmx2g', '-XX:+PrintGCDetails', '-XX:+PrintGCDateStamps'
+tasks.named<Test>("test") {
+    jvmArgs = listOf("-Xmx2g", "-XX:+PrintGCDetails", "-XX:+PrintGCDateStamps")
 }
+
 subprojects {
     if (name == "applications" || name == "components") return@subprojects
 

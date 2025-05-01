@@ -29,4 +29,8 @@ subprojects {
         testImplementation(kotlin("test-junit"))
     }
 }
+test {
+    minHeapSize = "512m"
+    maxHeapSize = "4096m" // 8 GB
+}
 

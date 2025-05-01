@@ -40,3 +40,6 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 application {
     mainClass.set("edu.colorado.capstone.email.MainKt")
 }
+plugins {
+    kotlin("jvm") version "2.0.0-RC1"
+}

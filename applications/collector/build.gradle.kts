@@ -1,9 +1,9 @@
 plugins {
-    kotlin("jvm") version "2.0.0-RC1"
+    kotlin("jvm") version "1.9.22"
     application
 }
 
-group = "edu.colorado.capstone"
+group = "edu.colorado.capstone" 
 version = "1.0"
 
 application {
@@ -44,13 +44,17 @@ dependencies {
     implementation("com.squareup.moshi:moshi:1.13.0")
     implementation("com.squareup.moshi:moshi-kotlin:1.13.0")
 
-    implementation("io.ktor:ktor-client-core:2.3.7")
-    implementation("io.ktor:ktor-client-cio:2.3.7")
-    implementation("io.ktor:ktor-client-json:2.3.7")
-    implementation("io.ktor:ktor-client-serialization:2.3.7")
-
     testImplementation("io.ktor:ktor-server-tests:2.3.7")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.9.22")
+
+    // Prometheus dependencies
+    implementation("io.prometheus:simpleclient:0.16.0")
+    implementation("io.prometheus:simpleclient_common:0.16.0")
+    implementation("io.prometheus:simpleclient_hotspot:0.16.0")
+    implementation("io.prometheus:simpleclient_httpserver:0.16.0")
+    implementation("io.micrometer:micrometer-registry-prometheus:1.11.0") // version may vary
+implementation("io.ktor:ktor-server-metrics-micrometer:2.3.4") // Match your Ktor version
+
 }
 
 tasks {
@@ -71,12 +75,12 @@ tasks {
 }
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
+        languageVersion.set(JavaLanguageVersion.of(17))
     }
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     kotlinOptions {
-        jvmTarget = "21"
+        jvmTarget = "17"
     }
 }

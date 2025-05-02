@@ -151,16 +151,16 @@ dependencies {
     implementation("io.ktor:ktor-server-metrics-micrometer:2.3.4") // Match your Ktor version
 
     //testing dependencies
-   //testImplementation(kotlin("test"))
- //testImplementation("io.mockk:mockk:1.13.3") // mocking Redis
-   // testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
- //testImplementation("org.junit.jupiter:junit-jupiter:5.9.3")
-//testImplementation("io.ktor:ktor-server-tests:2.3.7")
-
-testImplementation("org.jetbrains.kotlin:kotlin-test:2.0.0-RC1") 
-testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")     
-testImplementation("io.mockk:mockk:1.13.8")                    
+testImplementation(kotlin("test"))
+ testImplementation("io.mockk:mockk:1.13.3") // mocking Redis
+ testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+ testImplementation("org.junit.jupiter:junit-jupiter:5.9.3")
 testImplementation("io.ktor:ktor-server-tests:2.3.7")
+
+//testImplementation("org.jetbrains.kotlin:kotlin-test:2.0.0-RC1") 
+//testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")     
+//testImplementation("io.mockk:mockk:1.13.8")                    
+//testImplementation("io.ktor:ktor-server-tests:2.3.7")
 
 
 }
@@ -196,12 +196,7 @@ tasks {
     }
     
 }
-tasks.test {
-    useJUnitPlatform()  
- testLogging {
-        events("passed", "skipped", "failed")
-    }
-}
+
 /* java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(21))

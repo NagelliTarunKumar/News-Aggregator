@@ -30,13 +30,11 @@ dependencies {
 
 
     // Needed for respondText and HTTP status codes
-   implementation("io.ktor:ktor-server-core-jvm:2.3.7")
-implementation("io.ktor:ktor-server-netty-jvm:2.3.7")
-implementation("io.ktor:ktor-server-call-logging-jvm:2.3.7")
-implementation("io.ktor:ktor-server-content-negotiation-jvm:2.3.7")
-implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:2.3.7")
-implementation("io.ktor:ktor-server-responses:2.3.7")
-implementation("io.ktor:ktor-server-host-common-jvm:2.3.7")
+  implementation("io.ktor:ktor-server-core:2.3.7")
+    implementation("io.ktor:ktor-server-netty:2.3.7")
+    implementation("io.ktor:ktor-server-host-common:2.3.7")
+    implementation("io.ktor:ktor-server-call-logging:2.3.7")
+    implementation("io.ktor:ktor-server-status-pages:2.3.7")
 
 
     

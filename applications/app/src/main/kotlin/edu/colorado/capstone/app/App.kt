@@ -41,19 +41,19 @@ fun Application.configured(
     call.respondText("Hi, I am the App along the analyser logic", status = HttpStatusCode.OK)
 }
             get("/categorise") {
-                 call.respondText("Hi, I am the App that categorises news", status = HttpStatusCode.OK)
-                        // val topic = "technology"
+                
+                        val topic = "technology"
                         
-                        // if (topic != null) {
-                        //     val newsService = NewsService() // Initialize the service
-                        //     val categorizedNews = newsService.getCategorizedNewsForTopic(topic)
+                        if (topic != null) {
+                            val newsService = NewsService() // Initialize the service
+                            val categorizedNews = newsService.getCategorizedNewsForTopic(topic)
             
-                        //     // Return the response with the categorized news
-                        //     call.respond(HttpStatusCode.OK, categorizedNews)
-                        // } else {
-                        //     // If topic query parameter is not provided, return BadRequest
-                        //     call.respond(HttpStatusCode.BadRequest, "Topic query parameter is required")
-                        // }
+                            // Return the response with the categorized news
+                            call.respond(HttpStatusCode.OK, categorizedNews)
+                        } else {
+                            // If topic query parameter is not provided, return BadRequest
+                            call.respond(HttpStatusCode.BadRequest, "Topic query parameter is required")
+                        }
         }
     }
 }

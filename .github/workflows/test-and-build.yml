@@ -91,6 +91,9 @@ jobs:
 
       - name: Test analyzer endpoint
         run: curl --fail http://localhost:8081 || (echo "Analyzer not responding" && exit 1)
+        
+      - name: Test analyzer endpoint that categorises one of the topic technology news
+        run: curl --fail http://localhost:8081/categorise?topic=technology || (echo "Analyzer not responding" && exit 1)
       
 
       - name: Test app endpoint

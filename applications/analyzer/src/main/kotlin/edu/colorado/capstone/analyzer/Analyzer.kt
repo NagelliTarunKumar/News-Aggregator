@@ -10,7 +10,7 @@ import io.ktor.http.*
 import org.slf4j.LoggerFactory
 
 fun main() {
-    val port = System.getenv("PORT")?.toInt() ?: 8080
+    val port = System.getenv("PORT")?.toInt() ?: 8081
     val logger = LoggerFactory.getLogger("Analyzer")
 
     embeddedServer(Netty, port = port, host = "0.0.0.0") {

@@ -42,27 +42,21 @@ jobs:
 
       - name: Run collector.jar on port 8080 in background
         env:
-          DATABASE_URL: jdbc:postgresql://localhost:5432/starter_test
-          DB_USER: starter
-          DB_PASSWORD: starter
+          DATABASE_URL: jdbc:postgresql://localhost:5432/starter_test?user=starter&password=starter&sslmode=disable
         run: |
           java -jar applications/collector/build/libs/collector.jar --server.port=8080 &
           sleep 10
 
       - name: Run analyzer.jar on port 8081 in background
         env:
-          DATABASE_URL: jdbc:postgresql://localhost:5432/starter_test
-          DB_USER: starter
-          DB_PASSWORD: starter
+          DATABASE_URL: jdbc:postgresql://localhost:5432/starter_test?user=starter&password=starter&sslmode=disable
         run: |
           java -jar applications/analyzer/build/libs/analyzer.jar --server.port=8081 &
           sleep 10
 
       - name: Run app.jar on port 8082 in background
         env:
-          DATABASE_URL: jdbc:postgresql://localhost:5432/starter_test
-          DB_USER: starter
-          DB_PASSWORD: starter
+          DATABASE_URL: jdbc:postgresql://localhost:5432/starter_test?user=starter&password=starter&sslmode=disable
         run: |
           java -jar applications/app/build/libs/app.jar --server.port=8082 &
           sleep 10

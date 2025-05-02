@@ -22,6 +22,11 @@ fun Application.configured(
     val databaseTemplate = DatabaseTemplate(dataSource)
 
     routing {
+
+        get("/") {
+    logger.info("GET request received at /")
+    call.respondText("Hi, I am the App along the analyser logic", status = HttpStatusCode.OK)
+}
         index(databaseTemplate)
         health(databaseTemplate)
 
@@ -41,7 +46,7 @@ fun Application.module() {
 }
 
 fun main() {
-    val port = optionalEnvironmentVariable("PORT", "8080")
+    val port = optionalEnvironmentVariable("PORT", "8082")
     embeddedServer(Netty, port = port.toInt(), host = "0.0.0.0", module = { module() })
         .start(wait = true)
 }

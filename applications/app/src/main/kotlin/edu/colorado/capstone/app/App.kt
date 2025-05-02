@@ -17,7 +17,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
-
+import edu.colorado.capstone.app.NewsService 
 fun Application.configured(
     databaseUrl: String,
 ) {

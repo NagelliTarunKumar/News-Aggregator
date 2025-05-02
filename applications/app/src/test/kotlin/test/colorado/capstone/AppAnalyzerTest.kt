@@ -22,7 +22,7 @@ fun categorizeArticles(articles: List<NewsItem>): Map<String, List<NewsItem>> {
 class RouteTest {
 
     @Test
-    fun ⁠ test categorizeArticles returns correct grouping ⁠() {
+    fun testCategorizeArticlesReturnsCorrectGrouping() {
         println("✅ Running categorizeArticles test")
 
         val articles = listOf(
@@ -33,7 +33,6 @@ class RouteTest {
 
         val categorized = categorizeArticles(articles)
 
-        // Log output for verification
         println("Categorized result: $categorized")
 
         assertEquals(2, categorized["Google"]?.size)

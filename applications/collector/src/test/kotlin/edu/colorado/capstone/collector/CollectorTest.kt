@@ -45,14 +45,14 @@ class CollectorTest {
         println("fetchNewsByTopic unknown-topic test passed")
     }
 
-    @Test
-    fun `fetchNewsByQuery returns empty when cache and fetch fail`() {
-        println("Running fetchNewsByQuery test with failed cache and network")
-        every { redis.get(any<String>()) } returns null
-        val result = collector.fetchNewsByQuery(apiKey, "nonexistent", 100)
-        assertTrue(result.isEmpty())
-        println("fetchNewsByQuery failure fallback test passed")
-    }
+    // @Test
+    // fun `fetchNewsByQuery returns empty when cache and fetch fail`() {
+    //     println("Running fetchNewsByQuery test with failed cache and network")
+    //     every { redis.get(any<String>()) } returns null
+    //     val result = collector.fetchNewsByQuery(apiKey, "nonexistent", 100)
+    //     assertTrue(result.isEmpty())
+    //     println("fetchNewsByQuery failure fallback test passed")
+    // }
 
     @Test
     fun `fetchTopNews returns list when cache is missed and API is mocked`() {

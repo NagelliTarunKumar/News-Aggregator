@@ -68,4 +68,4 @@ jobs:
         run: curl --fail http://localhost:8081 || (echo "Analyzer not responding" && exit 1)
 
       - name: Test app endpoint
-        run: curl --fail http://localhost:8082 || (echo "App not responding" && exit 1)
+        run: curl --fail http://localhost:8082/analyse || (echo "App not responding" && exit 1)

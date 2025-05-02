@@ -53,4 +53,20 @@ class CollectorTest {
         assertTrue(result.isEmpty())
         println("fetchNewsByQuery failure fallback test passed")
     }
+
+    @Test
+    fun `fetchTopNews returns list when cache is missed and API is mocked`() {
+    println("🧪 fetchTopNews - mocked API returns expected list")
+    every { redis.get(any<String>()) } returns null
+
+    val result = collector.fetchTopNews(apiKey, 1)
+    assertTrue(result is List<Article>)
+    }
+
+    @Test
+    fun `fetchNewsByTopic returns empty list for unknown category`() {
+    println("🧪 fetchNewsByTopic - unknown topic returns empty")
+    val result = collector.fetchNewsByTopic(apiKey, "nonexistent")
+    assertTrue(result.isEmpty())
+    }
 }

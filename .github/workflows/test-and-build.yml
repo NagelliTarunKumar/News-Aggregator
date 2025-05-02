@@ -83,8 +83,12 @@ jobs:
       - name: Test collector endpoint
         run: curl --fail http://localhost:8080 || (echo "Collector not responding" && exit 1)
 
+      - name: Test collector endpoint to fetch top news
+        run: curl --fail http://localhost:8080/news || (echo "Collector not responding" && exit 1)
+
       - name: Test analyzer endpoint
         run: curl --fail http://localhost:8081 || (echo "Analyzer not responding" && exit 1)
+      
 
       - name: Test app endpoint
         run: curl --fail http://localhost:8082/analyse || (echo "App not responding" && exit 1)

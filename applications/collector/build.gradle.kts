@@ -143,7 +143,13 @@ dependencies {
     implementation("io.prometheus:simpleclient_hotspot:0.16.0")
     implementation("io.prometheus:simpleclient_httpserver:0.16.0")
     implementation("io.micrometer:micrometer-registry-prometheus:1.11.0") // version may vary
-implementation("io.ktor:ktor-server-metrics-micrometer:2.3.4") // Match your Ktor version
+    implementation("io.ktor:ktor-server-metrics-micrometer:2.3.4") // Match your Ktor version
+
+    //testing dependencies
+    testImplementation(kotlin("test"))
+    testImplementation("io.mockk:mockk:1.13.3") // mocking Redis
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.9.3")
 }
 
 application {

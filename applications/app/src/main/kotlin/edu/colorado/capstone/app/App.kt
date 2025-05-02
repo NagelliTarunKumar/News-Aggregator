@@ -30,15 +30,16 @@ fun Application.configured(
 
     routing {
 
-        get("/") {
     
-    call.respondText("Hi, I am the App along the analyser logic", status = HttpStatusCode.OK)
-}
         index(databaseTemplate)
         health(databaseTemplate)
 
         staticResources("/static/styles", "static/styles")
         staticResources("/static/images", "static/images")
+            get("/analyse") {
+    
+    call.respondText("Hi, I am the App along the analyser logic", status = HttpStatusCode.OK)
+}
     }
 }
 

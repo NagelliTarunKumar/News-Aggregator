@@ -42,7 +42,7 @@ dependencies {
     implementation("edu.stanford.nlp:stanford-corenlp:4.5.4")
     implementation("edu.stanford.nlp:stanford-corenlp:4.5.4:models")
 
-    // ✅ Use only JUnit 5 directly (no kotlin-test to avoid conflicts)
+    // JUnit 5
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
 }
@@ -51,22 +51,25 @@ application {
     mainClass.set("edu.colorado.capstone.app.AppKt")
 }
 
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21)) // ⚠️ Updated to match database-support module
+    }
+}
+
+kotlin {
+    jvmToolchain(21)
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
+    }
+}
+
 tasks.test {
     useJUnitPlatform()
     testLogging {
         events("passed", "skipped", "failed")
         showStandardStreams = true
     }
-}
-
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
-    }
-}
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-    kotlinOptions.jvmTarget = "17"
 }
 
 tasks.jar {

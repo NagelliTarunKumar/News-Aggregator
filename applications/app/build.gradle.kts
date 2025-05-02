@@ -51,18 +51,6 @@ application {
     mainClass.set("edu.colorado.capstone.app.AppKt")
 }
 
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21)) // ⚠️ Updated to match database-support module
-    }
-}
-
-kotlin {
-    jvmToolchain(21)
-    compilerOptions {
-        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
-    }
-}
 
 tasks.test {
     useJUnitPlatform()

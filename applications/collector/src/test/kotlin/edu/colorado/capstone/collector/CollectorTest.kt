@@ -1,7 +1,8 @@
 package edu.colorado.capstone.collector
 
 import io.mockk.*
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import redis.clients.jedis.Jedis
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -14,13 +15,18 @@ class CollectorTest {
 
     @BeforeEach
     fun setup() {
+        println("Setting up Mock Redis and Collector instance")
         redis = mockk(relaxed = true)
         collector = Collector(redis)
     }
 
     @Test
     fun `fetchTopNews returns cached result`() {
-        val cachedJson = "[{\"title\": \"Cached News\", \"description\": \"desc\", \"url\": \"https://example.com\", \"publishedAt\": \"2024-01-01T00:00:00Z\"}]"
+        println("Running fetchTopNews test with mocked cache")
+        val cachedJson = """
+            [{"title": "Cached News", "description": "desc", "url": "https://example.com", "publishedAt": "2024-01-01T00:00:00Z"}]
+        """.trimIndent()
+
         every { redis.get("topNews:100") } returns cachedJson
 
         val result = collector.fetchTopNews(apiKey)
@@ -28,19 +34,23 @@ class CollectorTest {
         assertEquals(1, result.size)
         assertEquals("Cached News", result[0].title)
         verify(exactly = 1) { redis.get("topNews:100") }
+        println("fetchTopNews test passed")
     }
 
     @Test
     fun `fetchNewsByTopic returns empty for unknown topic`() {
+        println("Running fetchNewsByTopic test with unknown topic")
         val result = collector.fetchNewsByTopic(apiKey, "unknown")
         assertTrue(result.isEmpty())
+        println("fetchNewsByTopic unknown-topic test passed")
     }
 
- /*   @Test
+    @Test
     fun `fetchNewsByQuery returns empty when cache and fetch fail`() {
-    every { redis.get(any<String>()) } returns null
-    val result = collector.fetchNewsByQuery(apiKey, "nonexistent", 100)
-    assertTrue(result.isEmpty())
-    }*/
-
+        println("Running fetchNewsByQuery test with failed cache and network")
+        every { redis.get(any<String>()) } returns null
+        val result = collector.fetchNewsByQuery(apiKey, "nonexistent", 100)
+        assertTrue(result.isEmpty())
+        println("fetchNewsByQuery failure fallback test passed")
+    }
 }

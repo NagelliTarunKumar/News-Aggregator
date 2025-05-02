@@ -29,7 +29,9 @@ jobs:
           --health-retries 5
         ports:
           - 6379:6379
-
+    env:
+      JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.7-6/x64
+      JAVA_HOME_21_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.7-6/x64
     steps:
       - uses: actions/checkout@v4
 

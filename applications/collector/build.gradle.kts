@@ -161,7 +161,7 @@ application {
 tasks {
     jar {
         // Force the output file name
-        archiveBaseName.set("analyzer")
+        archiveBaseName.set("collector")
         archiveVersion.set("") // This removes the "-1.0" from the filename
 
         manifest {

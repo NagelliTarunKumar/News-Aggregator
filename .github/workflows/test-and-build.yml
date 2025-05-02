@@ -40,32 +40,38 @@ jobs:
       - name: Build all modules
         run: ./gradlew build
 
-      - name: Run collector.jar in background
+      - name: Run collector.jar on port 8080 in background
         env:
           DATABASE_URL: jdbc:postgresql://localhost:5432/starter_test
           DB_USER: starter
           DB_PASSWORD: starter
         run: |
-          java -jar applications/collector/build/libs/collector.jar &
+          java -jar applications/collector/build/libs/collector.jar --server.port=8080 &
           sleep 10
 
-      - name: Run analyzer.jar in background
+      - name: Run analyzer.jar on port 8081 in background
         env:
           DATABASE_URL: jdbc:postgresql://localhost:5432/starter_test
           DB_USER: starter
           DB_PASSWORD: starter
         run: |
-          java -jar applications/analyzer/build/libs/analyzer.jar &
+          java -jar applications/analyzer/build/libs/analyzer.jar --server.port=8081 &
           sleep 10
 
-      - name: Run app.jar in background
+      - name: Run app.jar on port 8082 in background
         env:
           DATABASE_URL: jdbc:postgresql://localhost:5432/starter_test
           DB_USER: starter
           DB_PASSWORD: starter
         run: |
-          java -jar applications/app/build/libs/app.jar &
+          java -jar applications/app/build/libs/app.jar --server.port=8082 &
           sleep 10
 
       - name: Test collector endpoint
         run: curl --fail http://localhost:8080 || (echo "Collector not responding" && exit 1)
+
+      - name: Test analyzer endpoint
+        run: curl --fail http://localhost:8081 || (echo "Analyzer not responding" && exit 1)
+
+      - name: Test app endpoint
+        run: curl --fail http://localhost:8082 || (echo "App not responding" && exit 1)

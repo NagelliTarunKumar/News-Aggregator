@@ -1,98 +1,87 @@
-group = "edu.colorado.capstone"
+plugins {
+    kotlin("jvm") version "2.0.0-RC1"
+    kotlin("plugin.serialization") version "2.0.0-RC1"
+    application
+}
 
-val ktorVersion: String by project
-val hikariVersion: String by project
-val postgresVersion: String by project
+group = "edu.colorado.capstone"
+version = "1.0"
+
+repositories {
+    mavenCentral()
+}
+
+val ktorVersion = "2.3.7"
+val hikariVersion = "5.0.1"
+val postgresVersion = "42.6.0"
 
 dependencies {
     implementation(project(":components:database-support"))
 
-    implementation("io.ktor:ktor-server-core-jvm:$ktorVersion")
-    implementation("io.ktor:ktor-server-freemarker-jvm:$ktorVersion")
-    implementation("io.ktor:ktor-server-netty-jvm:$ktorVersion")
+    // Ktor server
+    implementation("io.ktor:ktor-server-core:$ktorVersion")
+    implementation("io.ktor:ktor-server-netty:$ktorVersion")
+    implementation("io.ktor:ktor-server-call-logging:$ktorVersion")
     implementation("io.ktor:ktor-server-sessions:$ktorVersion")
+    implementation("io.ktor:ktor-server-status-pages:$ktorVersion")
+    implementation("io.ktor:ktor-server-host-common:$ktorVersion")
+    implementation("io.ktor:ktor-server-freemarker:$ktorVersion")
 
+    // Ktor client
+    implementation("io.ktor:ktor-client-core:$ktorVersion")
+    implementation("io.ktor:ktor-client-cio:$ktorVersion")
+    implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+    implementation("io.ktor:ktor-serialization-gson:$ktorVersion")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+
+    // DB + Stanford NLP
     implementation("com.zaxxer:HikariCP:$hikariVersion")
     implementation("org.postgresql:postgresql:$postgresVersion")
-    implementation("io.ktor:ktor-client-core:2.3.7")
-    implementation("io.ktor:ktor-client-cio:2.3.7")
-    implementation("io.ktor:ktor-client-content-negotiation:2.3.7")
-    implementation("io.ktor:ktor-serialization-gson:2.3.7")
-
-    implementation("io.ktor:ktor-client-core:2.3.7")
-    implementation("io.ktor:ktor-client-cio:2.3.7")
-    implementation("io.ktor:ktor-client-content-negotiation:2.3.7")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.7")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
     implementation("edu.stanford.nlp:stanford-corenlp:4.5.4")
     implementation("edu.stanford.nlp:stanford-corenlp:4.5.4:models")
 
+    // Ktor server testing (needed for testApplication, ApplicationTestBuilder, etc.)
+    testImplementation("io.ktor:ktor-server-test-host:2.3.7")
 
-    // Needed for respondText and HTTP status codes
-  implementation("io.ktor:ktor-server-core:2.3.7")
-    implementation("io.ktor:ktor-server-netty:2.3.7")
-    implementation("io.ktor:ktor-server-host-common:2.3.7")
-    implementation("io.ktor:ktor-server-call-logging:2.3.7")
-    implementation("io.ktor:ktor-server-status-pages:2.3.7")
-
-
-    
-
-    testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
+    // ✅ Use only JUnit 5 directly (no kotlin-test to avoid conflicts)
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
 }
 
-plugins {
-    kotlin("jvm") version "2.0.0-RC1"
-    application
-    kotlin("plugin.serialization") version "2.0.0-RC1"
+application {
+    mainClass.set("edu.colorado.capstone.app.AppKt")
 }
 
-//task<JavaExec>("run") {
-//    classpath = files(tasks.jar)
-//}
-
-tasks {
-    jar {
-        manifest { attributes("Main-Class" to "edu.colorado.capstone.app.AppKt") }
-        duplicatesStrategy = DuplicatesStrategy.INCLUDE
-        from({
-            configurations.runtimeClasspath.get()
-                .filter { it.name.endsWith("jar") }
-                .map(::zipTree)
-        })
-    }
-}
-tasks.withType<Test>().configureEach {
+tasks.test {
+    useJUnitPlatform()
     testLogging {
         events("passed", "skipped", "failed")
         showStandardStreams = true
     }
 }
 
-/* java {
+java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
+        languageVersion.set(JavaLanguageVersion.of(17))
     }
 }
-tasks.test {
-    maxHeapSize = "2g"
-}
+
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-    kotlinOptions {
-        jvmTarget = "21"
+    kotlinOptions.jvmTarget = "17"
+}
+
+tasks.jar {
+    archiveBaseName.set("app")
+    archiveVersion.set("")
+    manifest {
+        attributes["Main-Class"] = application.mainClass.get()
     }
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    from({
+        configurations.runtimeClasspath.get()
+            .filter { it.name.endsWith("jar") }
+            .map(::zipTree)
+    })
 }
-*/
-// application {
-//     mainClass.set("edu.colorado.capstone.app.EmailConsumerKt")
-// }
-
-application {
-    mainClass.set("edu.colorado.capstone.app.AppKt")
-}
-
-
-
-
-

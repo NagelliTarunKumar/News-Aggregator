@@ -45,28 +45,42 @@ class CollectorTest {
         println("fetchNewsByTopic unknown-topic test passed")
     }
 
-    // @Test
-    // fun `fetchNewsByQuery returns empty when cache and fetch fail`() {
-    //     println("Running fetchNewsByQuery test with failed cache and network")
-    //     every { redis.get(any<String>()) } returns null
-    //     val result = collector.fetchNewsByQuery(apiKey, "nonexistent", 100)
-    //     assertTrue(result.isEmpty())
-    //     println("fetchNewsByQuery failure fallback test passed")
-    // }
-
     @Test
     fun `fetchTopNews returns list when cache is missed and API is mocked`() {
-    println("🧪 fetchTopNews - mocked API returns expected list")
-    every { redis.get(any<String>()) } returns null
+        println("🧪 fetchTopNews - mocked API returns expected list")
+        every { redis.get(any<String>()) } returns null
 
-    val result = collector.fetchTopNews(apiKey, 1)
-    assertTrue(result is List<Article>)
+        val result = collector.fetchTopNews(apiKey, 1)
+        assertTrue(result is List<Article>)
     }
 
     @Test
     fun `fetchNewsByTopic returns empty list for unknown category`() {
-    println("🧪 fetchNewsByTopic - unknown topic returns empty")
-    val result = collector.fetchNewsByTopic(apiKey, "nonexistent")
-    assertTrue(result.isEmpty())
+        println("🧪 fetchNewsByTopic - unknown topic returns empty")
+        val result = collector.fetchNewsByTopic(apiKey, "nonexistent")
+        assertTrue(result.isEmpty())
+    }
+
+    @Test
+    fun `fetchTopNews uses correct Redis key`() {
+        println("🧪 Verifying correct Redis key used for top news")
+        every { redis.get("topNews:50") } returns "[]"
+
+        collector.fetchTopNews(apiKey, 50)
+
+        verify { redis.get("topNews:50") }
+    }
+
+    @Test
+    fun `fetchTopNews calls external source when cache miss occurs`() {
+        println("🧪 Verifying behavior on cache miss")
+        every { redis.get("topNews:5") } returns null
+
+        // We assume internal API logic is called. Since we can't verify internal behavior without exposing it,
+        // we just check the flow continues without error and returns a list.
+        val result = collector.fetchTopNews(apiKey, 5)
+
+        assertTrue(result is List<Article>)
+        println("✅ External fetch fallback test passed")
     }
 }

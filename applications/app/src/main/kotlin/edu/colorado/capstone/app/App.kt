@@ -24,7 +24,7 @@ fun Application.configured(
     routing {
 
         get("/") {
-    logger.info("GET request received at /")
+    
     call.respondText("Hi, I am the App along the analyser logic", status = HttpStatusCode.OK)
 }
         index(databaseTemplate)

@@ -3,7 +3,7 @@ package edu.colorado.capstone.app
 import freemarker.cache.ClassTemplateLoader
 import io.initialcapacity.database.DatabaseTemplate
 import io.initialcapacity.database.dataSource
-import io.ktor.server.application.*
+import io.ktor.server.application.* 
 import io.ktor.server.engine.*
 import io.ktor.server.freemarker.*
 import io.ktor.server.http.content.*

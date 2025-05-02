@@ -108,7 +108,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 // }
 
 application {
-    mainClass.set("edu.colorado.capstone.app.AppKt")
+    mainClass.set("edu.colorado.capstone.app.AppKt")}
 
 
 

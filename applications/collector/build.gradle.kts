@@ -59,6 +59,11 @@ dependencies {
     implementation("io.micrometer:micrometer-registry-prometheus:1.11.0") // version may vary
 implementation("io.ktor:ktor-server-metrics-micrometer:2.3.4") // Match your Ktor version
 
+
+testImplementation(kotlin("test"))
+    testImplementation("io.mockk:mockk:1.13.8")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
+
 }
 
 tasks {

@@ -75,7 +75,9 @@ tasks.withType<Test>().configureEach {
         languageVersion.set(JavaLanguageVersion.of(21))
     }
 }
-
+tasks.test {
+    maxHeapSize = "2g"
+}
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     kotlinOptions {
         jvmTarget = "21"

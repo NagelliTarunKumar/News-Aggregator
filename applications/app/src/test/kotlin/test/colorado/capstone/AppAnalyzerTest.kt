@@ -43,4 +43,47 @@ class RouteTest {
 
         println("✅ categorizeArticles test passed")
     }
+
+    @Test
+    fun testCategorizeArticlesWithEmptyList() {
+        val articles = emptyList<NewsItem>()
+        val categorized = categorizeArticles(articles)
+
+        assertTrue(categorized.isEmpty())
+    }
+
+    @Test
+    fun testAllArticlesInGoogleCategory() {
+        val articles = listOf(
+            NewsItem("Google News One", "https://google.com/1"),
+            NewsItem("Google News Two", "https://google.com/2")
+        )
+        val categorized = categorizeArticles(articles)
+
+        assertEquals(2, categorized["Google"]?.size)
+        assertTrue("Other" !in categorized)
+    }
+
+    @Test
+    fun testNoGoogleArticles() {
+        val articles = listOf(
+            NewsItem("Apple introduces M3", "https://apple.com"),
+            NewsItem("Microsoft builds AI tools", "https://microsoft.com")
+        )
+        val categorized = categorizeArticles(articles)
+
+        assertEquals(2, categorized["Other"]?.size)
+        assertTrue("Google" !in categorized)
+    }
+
+    @Test
+    fun testCaseSensitivityInCategorization() {
+        val articles = listOf(
+            NewsItem("google announces search changes", "https://google.com") // lowercase "google"
+        )
+        val categorized = categorizeArticles(articles)
+
+        assertEquals(1, categorized["Other"]?.size)
+        assertTrue("Google" !in categorized)
+    }
 }

@@ -20,6 +20,17 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
+
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - uses: actions/checkout@v4
 
@@ -36,6 +47,9 @@ jobs:
           sudo ln -s `pwd`/flyway-9.22.3/flyway /usr/local/bin
           psql --host localhost --username postgres < databases/create_databases.sql
           /usr/local/bin/flyway -user=starter -password=starter -url="jdbc:postgresql://localhost:5432/starter_test" -locations=filesystem:databases/starter migrate
+
+      - name: Verify Redis is running
+        run: redis-cli -h localhost ping
 
       - name: Build all modules
         run: ./gradlew build

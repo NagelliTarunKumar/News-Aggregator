@@ -28,6 +28,16 @@ dependencies {
     implementation("edu.stanford.nlp:stanford-corenlp:4.5.4")
     implementation("edu.stanford.nlp:stanford-corenlp:4.5.4:models")
 
+ implementation("io.ktor:ktor-server-core-jvm:2.3.4")
+    implementation("io.ktor:ktor-server-netty-jvm:2.3.4")
+    implementation("io.ktor:ktor-server-call-logging-jvm:2.3.4")
+    implementation("io.ktor:ktor-server-content-negotiation-jvm:2.3.4")
+    implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:2.3.4")
+
+    // Needed for respondText and HTTP status codes
+    implementation("io.ktor:ktor-server-responses:2.3.4")
+    implementation("io.ktor:ktor-server-host-common-jvm:2.3.4")
+
     
 
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")

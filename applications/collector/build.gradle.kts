@@ -1,100 +1,3 @@
-/* /*plugins {
-    kotlin("jvm") version "1.9.22"
-    application
-}*/
-plugins {
-    kotlin("jvm") version "2.0.0-RC1"
-}
-
-
-group = "edu.colorado.capstone" 
-version = "1.0"
-
-application {
-    mainClass.set("edu.colorado.capstone.collector.CollectorKt")
-}
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    implementation("io.ktor:ktor-server-core:2.3.7")
-    implementation("io.ktor:ktor-server-netty:2.3.7")
-    implementation("ch.qos.logback:logback-classic:1.4.11")
-
-
-        // Ktor Server dependencies
-    implementation("io.ktor:ktor-server-core:2.3.4")
-    implementation("io.ktor:ktor-server-netty:2.3.4")
-    implementation("io.ktor:ktor-server-call-logging:2.3.4")
-    implementation("ch.qos.logback:logback-classic:1.4.11")
-
-    // OkHttp for HTTP requests
-    implementation("com.squareup.okhttp3:okhttp:4.12.0")
-
-    // Moshi for JSON parsing
-    implementation("com.squareup.moshi:moshi:1.15.0")
-    implementation("com.squareup.moshi:moshi-kotlin:1.15.0")
-
-
-    implementation("io.ktor:ktor-server-core:2.3.4")
-    implementation("io.ktor:ktor-server-netty:2.3.4")
-    implementation("io.ktor:ktor-server-content-negotiation:2.3.4")
-    implementation("io.ktor:ktor-serialization-gson:2.3.4")
-
-
-    implementation("redis.clients:jedis:5.1.0")
-    implementation("com.squareup.moshi:moshi:1.13.0")
-    implementation("com.squareup.moshi:moshi-kotlin:1.13.0")
-
-    testImplementation("io.ktor:ktor-server-tests:2.3.7")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.9.22")
-
-    // Prometheus dependencies
-    implementation("io.prometheus:simpleclient:0.16.0")
-    implementation("io.prometheus:simpleclient_common:0.16.0")
-    implementation("io.prometheus:simpleclient_hotspot:0.16.0")
-    implementation("io.prometheus:simpleclient_httpserver:0.16.0")
-    implementation("io.micrometer:micrometer-registry-prometheus:1.11.0") // version may vary
-implementation("io.ktor:ktor-server-metrics-micrometer:2.3.4") // Match your Ktor version
-
-
-testImplementation(kotlin("test"))
-    testImplementation("io.mockk:mockk:1.13.8")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
-
-}
-
-tasks {
-    jar {
-        manifest {
-            attributes["Main-Class"] = application.mainClass.get()
-        }
-        duplicatesStrategy = DuplicatesStrategy.INCLUDE
-        from({
-            configurations.runtimeClasspath.get()
-                .filter { it.name.endsWith("jar") }
-                .map { zipTree(it) }
-        })
-
-        archiveBaseName.set("collector")
-        archiveVersion.set("")
-    }
-}
- java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
-    }
-}
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-    kotlinOptions {
-        jvmTarget = "17"
-    }
-}*/
-
-
 plugins {
     kotlin("jvm") version "2.0.0-RC1"
     application
@@ -110,102 +13,64 @@ repositories {
 val ktorVersion = "2.3.7"
 
 dependencies {
-   implementation("io.ktor:ktor-server-core:2.3.7")
-    implementation("io.ktor:ktor-server-netty:2.3.7")
+    // Main app deps
+    implementation("io.ktor:ktor-server-core:$ktorVersion")
+    implementation("io.ktor:ktor-server-netty:$ktorVersion")
+    implementation("io.ktor:ktor-server-call-logging:$ktorVersion")
+    implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
+    implementation("io.ktor:ktor-serialization-gson:$ktorVersion")
+    implementation("io.ktor:ktor-server-metrics-micrometer:$ktorVersion")
     implementation("ch.qos.logback:logback-classic:1.4.11")
-
-
-        // Ktor Server dependencies
-    implementation("io.ktor:ktor-server-core:2.3.4")
-    implementation("io.ktor:ktor-server-netty:2.3.4")
-    implementation("io.ktor:ktor-server-call-logging:2.3.4")
-    implementation("ch.qos.logback:logback-classic:1.4.11")
-
-    // OkHttp for HTTP requests
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
-
-    // Moshi for JSON parsing
     implementation("com.squareup.moshi:moshi:1.15.0")
     implementation("com.squareup.moshi:moshi-kotlin:1.15.0")
-
-
-    implementation("io.ktor:ktor-server-core:2.3.4")
-    implementation("io.ktor:ktor-server-netty:2.3.4")
-    implementation("io.ktor:ktor-server-content-negotiation:2.3.4")
-    implementation("io.ktor:ktor-serialization-gson:2.3.4")
-
-
     implementation("redis.clients:jedis:5.1.0")
-    implementation("com.squareup.moshi:moshi:1.13.0")
-    implementation("com.squareup.moshi:moshi-kotlin:1.13.0")
-
-    
-   
-
-    // Prometheus dependencies
     implementation("io.prometheus:simpleclient:0.16.0")
     implementation("io.prometheus:simpleclient_common:0.16.0")
     implementation("io.prometheus:simpleclient_hotspot:0.16.0")
     implementation("io.prometheus:simpleclient_httpserver:0.16.0")
-    implementation("io.micrometer:micrometer-registry-prometheus:1.11.0") // version may vary
-    implementation("io.ktor:ktor-server-metrics-micrometer:2.3.4") // Match your Ktor version
+    implementation("io.micrometer:micrometer-registry-prometheus:1.11.0")
 
-    //testing dependencies
-testImplementation(kotlin("test"))
- testImplementation("io.mockk:mockk:1.13.3") // mocking Redis
- testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
- testImplementation("org.junit.jupiter:junit-jupiter:5.9.3")
-testImplementation("io.ktor:ktor-server-tests:2.3.7")
-
-//testImplementation("org.jetbrains.kotlin:kotlin-test:2.0.0-RC1") 
-//testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")     
-//testImplementation("io.mockk:mockk:1.13.8")                    
-//testImplementation("io.ktor:ktor-server-tests:2.3.7")
-
-
+    //  Clean test setup for Kotlin + JUnit 5 (no conflicts)
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
+    testImplementation("io.mockk:mockk:1.13.3")
 }
 
 application {
-    // Dynamic main class depending on module
-    mainClass.set(
-        when (projectDir.name) {
-            "analyzer" -> "edu.colorado.capstone.analyzer.AnalyzerKt"
-            "collector" -> "edu.colorado.capstone.collector.CollectorKt"
-            "app" -> "edu.colorado.capstone.app.AppKt"
-            else -> "edu.colorado.capstone.MainKt"
-        }
-    )
+    mainClass.set("edu.colorado.capstone.collector.CollectorKt")
 }
 
-tasks {
-    jar {
-        // Force the output file name
-        archiveBaseName.set("collector")
-        archiveVersion.set("") // This removes the "-1.0" from the filename
-
-        manifest {
-            attributes["Main-Class"] = application.mainClass.get()
-        }
-
-        duplicatesStrategy = DuplicatesStrategy.INCLUDE
-        from({
-            configurations.runtimeClasspath.get()
-                .filter { it.name.endsWith("jar") }
-                .map(::zipTree)
-        })
+tasks.test {
+    useJUnitPlatform()
+    testLogging {
+        events("passed", "skipped", "failed")
+        showStandardStreams = true
     }
-    
 }
 
-/* java {
+java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
+        languageVersion.set(JavaLanguageVersion.of(17))
     }
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     kotlinOptions {
-        jvmTarget = "21"
+        jvmTarget = "17"
     }
-} 
-*/
+}
+
+tasks.jar {
+    archiveBaseName.set("collector")
+    archiveVersion.set("")
+    manifest {
+        attributes["Main-Class"] = application.mainClass.get()
+    }
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    from({
+        configurations.runtimeClasspath.get()
+            .filter { it.name.endsWith("jar") }
+            .map(::zipTree)
+    })
+}

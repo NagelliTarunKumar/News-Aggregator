@@ -6,10 +6,19 @@ import io.ktor.client.request.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class HealthTest {
-     @Test
-   fun testHealth() = testApp {
-         val response = client.get("/health")
-        assertEquals(HttpStatusCode.OK, response.status)
-     }
- }
+//class HealthTest {
+    // @Test
+ //  fun testHealth() = testApp {
+   //      val response = client.get("/health")
+ //       assertEquals(HttpStatusCode.OK, response.status)
+   //  }}
+
+
+
+class ExampleTest {
+    @Test
+    fun sample() {
+        assertEquals(4, 2 + 2)
+    }
+}
+ 

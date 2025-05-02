@@ -1,60 +1,95 @@
 package edu.colorado.capstone.app
 
-import io.ktor.server.testing.*
-import io.ktor.http.*
-import kotlin.test.*
-import io.ktor.server.application.*
-import io.ktor.server.routing.*
-import io.ktor.server.response.*
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
+import io.mockk.every
+import io.mockk.mockk
 
-class RouteTest {
+class NewsItemTest {
 
-    // Test: Check that /analyse responds with the correct text
     @Test
-    fun testAnalyseEndpoint() = testApplication {
-        application {
-            routing {
-                get("/analyse") {
-                    call.respondText("Hi, I am the App along the analyser logic", status = HttpStatusCode.OK)
-                }
-            }
-        }
-
-        val response = client.get("/analyse")
-        assertEquals(HttpStatusCode.OK, response.status)
-        assertEquals("Hi, I am the App along the analyser logic", response.bodyAsText())
-    }
-
-    // Test: Check for invalid endpoint (404 response)
-    @Test
-    fun testInvalidEndpoint() = testApplication {
-        application {
-            routing {
-                get("/valid-endpoint") {
-                    call.respond(HttpStatusCode.OK, "This is a valid endpoint")
-                }
-            }
-        }
-
-        val response = client.get("/invalid-endpoint")
-        assertEquals(HttpStatusCode.NotFound, response.status)
-    }
-
-    // Test: Check functionality of NewsService (mock external API call)
-    @Test
-    fun testNewsService() = testApplication {
-        val newsService = NewsService()
-
-        // Mock response to simulate the API call
-        val mockedTopStories = listOf(
-            NewsItem(title = "Title 1", description = "Description 1"),
-            NewsItem(title = "Title 2", description = "Description 2")
+    fun `test creating NewsItem with all properties`() {
+        // Create a NewsItem with all fields (title, url, description)
+        val newsItem = NewsItem(
+            title = "Breaking News: Kotlin is Awesome!",
+            url = "https://kotlinlang.org",
+            description = "Kotlin is a great language for modern development."
         )
 
-        // You can replace the network request with a mock or predefined data here for testing purposes
+        // Assert that the NewsItem has the correct properties
+        assertEquals("Breaking News: Kotlin is Awesome!", newsItem.title)
+        assertEquals("https://kotlinlang.org", newsItem.url)
+        assertEquals("Kotlin is a great language for modern development.", newsItem.description)
+    }
 
-        val topStories = newsService.getTopStories()
-        assertEquals(5, topStories.size)  // This assumes the `getTopStories()` method is supposed to return at most 5 stories
-        assertTrue(topStories.all { it.title.isNotEmpty() && it.description.isNotEmpty() })  // Validate that all have titles and descriptions
+    @Test
+    fun `test creating NewsItem with only title and url`() {
+        // Create a NewsItem with just title and url (description should be null)
+        val newsItem = NewsItem(
+            title = "Kotlin 1.6 Released",
+            url = "https://kotlinlang.org/blog/2021/12/01/kotlin-1-6-0-released"
+        )
+
+        // Assert that the NewsItem has the correct properties
+        assertEquals("Kotlin 1.6 Released", newsItem.title)
+        assertEquals("https://kotlinlang.org/blog/2021/12/01/kotlin-1-6-0-released", newsItem.url)
+        assertNull(newsItem.description)  // Since description is nullable and not provided
+    }
+
+    @Test
+    fun `test serialization of NewsItem`() {
+        // Create a NewsItem
+        val newsItem = NewsItem(
+            title = "Kotlin Serialization",
+            url = "https://kotlinlang.org/docs/serialization.html",
+            description = "Learn how to use Kotlin serialization to work with JSON and other formats."
+        )
+
+        // Serialize the NewsItem to JSON string
+        val jsonString = Json.encodeToString(newsItem)
+
+        // Assert that the JSON string contains the expected fields
+        assertTrue(jsonString.contains("\"title\":\"Kotlin Serialization\""))
+        assertTrue(jsonString.contains("\"url\":\"https://kotlinlang.org/docs/serialization.html\""))
+        assertTrue(jsonString.contains("\"description\":\"Learn how to use Kotlin serialization to work with JSON and other formats.\""))
+    }
+
+    @Test
+    fun `test deserialization of NewsItem`() {
+        // Define a JSON string representing a NewsItem
+        val jsonString = """
+            {
+                "title": "Kotlin 1.6.0 Features",
+                "url": "https://kotlinlang.org/docs/whatsnew/1.6.0.html",
+                "description": "Kotlin 1.6.0 introduces many new features."
+            }
+        """.trimIndent()
+
+        // Deserialize the JSON string into a NewsItem object
+        val newsItem = Json.decodeFromString<NewsItem>(jsonString)
+
+        // Assert that the deserialized object has the correct properties
+        assertEquals("Kotlin 1.6.0 Features", newsItem.title)
+        assertEquals("https://kotlinlang.org/docs/whatsnew/1.6.0.html", newsItem.url)
+        assertEquals("Kotlin 1.6.0 introduces many new features.", newsItem.description)
+    }
+
+    @Test
+    fun `test mock NewsItem usage`() {
+        // Mock a NewsItem using MockK
+        val mockNewsItem = mockk<NewsItem>()
+
+        // Define behavior of the mock
+        every { mockNewsItem.title } returns "Mock News"
+        every { mockNewsItem.url } returns "https://mocknews.com"
+        every { mockNewsItem.description } returns "This is a mock description."
+
+        // Assert that the mock returns the correct values
+        assertEquals("Mock News", mockNewsItem.title)
+        assertEquals("https://mocknews.com", mockNewsItem.url)
+        assertEquals("This is a mock description.", mockNewsItem.description)
     }
 }

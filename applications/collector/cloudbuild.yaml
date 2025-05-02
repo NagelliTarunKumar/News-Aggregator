@@ -3,7 +3,7 @@ options:
 
 steps: 
   # Step 1: Build Docker image and tag it as 'latest'
-  - name: 'gcr.io/cloud-builders/docker'
+  - name: 'gcr.io/cloud-builders/docker' 
     args: [
       'build',
       '-t', 'us-central1-docker.pkg.dev/fseassignment4/fse4/collector-service:latest',

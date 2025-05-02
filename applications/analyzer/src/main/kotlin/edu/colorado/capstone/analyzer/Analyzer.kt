@@ -15,6 +15,10 @@ fun main() {
 
     embeddedServer(Netty, port = port, host = "0.0.0.0") {
         routing {
+            get("/") {
+    logger.info("GET request received at /analyze")
+    call.respondText("Hi, I am Analyzer the APP directly my logic in it", status = HttpStatusCode.OK)
+}
             post("/analyze") {
                 val input = call.receiveText()
                 logger.info("Received: $input")

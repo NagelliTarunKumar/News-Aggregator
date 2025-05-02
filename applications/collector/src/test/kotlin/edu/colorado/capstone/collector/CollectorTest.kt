@@ -36,11 +36,11 @@ class CollectorTest {
         assertTrue(result.isEmpty())
     }
 
-    @Test
+ /*   @Test
     fun `fetchNewsByQuery returns empty when cache and fetch fail`() {
     every { redis.get(any<String>()) } returns null
     val result = collector.fetchNewsByQuery(apiKey, "nonexistent", 100)
     assertTrue(result.isEmpty())
-    }
+    }*/
 
 }

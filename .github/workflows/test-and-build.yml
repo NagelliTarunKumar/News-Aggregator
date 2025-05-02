@@ -86,6 +86,9 @@ jobs:
       - name: Test collector endpoint to fetch top news
         run: curl --fail http://localhost:8080/news || (echo "Collector not responding" && exit 1)
 
+      - name: Test collector search endpoint for topic 'technology'
+        run: curl --fail "http://localhost:8080/search?topic=technology" || (echo "Collector search endpoint not responding" && exit 1)
+
       - name: Test analyzer endpoint
         run: curl --fail http://localhost:8081 || (echo "Analyzer not responding" && exit 1)
       

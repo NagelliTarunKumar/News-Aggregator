@@ -151,10 +151,14 @@ dependencies {
     implementation("io.ktor:ktor-server-metrics-micrometer:2.3.4") // Match your Ktor version
 
     //testing dependencies
-    testImplementation(kotlin("test"))
-    testImplementation("io.mockk:mockk:1.13.3") // mocking Redis
+    //testImplementation(kotlin("test"))
+  //  testImplementation("io.mockk:mockk:1.13.3") // mocking Redis
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.9.3")
+   // testImplementation("org.junit.jupiter:junit-jupiter:5.9.3")
+
+      testImplementation(kotlin("test"))
+    testImplementation("io.mockk:mockk:1.13.8")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
 }
 
 application {

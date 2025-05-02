@@ -41,7 +41,7 @@ jobs:
         run: ./gradlew build
 
       - name: Run unit tests
-        run: ./gradlew :applications:collector:test --info --tests "*"
+        run: ./gradlew :applications:collector:test
 
       - name: Run collector.jar on port 8080 in background
         env:

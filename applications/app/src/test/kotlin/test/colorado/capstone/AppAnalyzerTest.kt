@@ -22,7 +22,7 @@ fun categorizeArticles(articles: List<NewsItem>): Map<String, List<NewsItem>> {
 class RouteTest {
 
     @Test
-    fun `test categorizeArticles returns correct grouping`() {
+    fun ⁠ test categorizeArticles returns correct grouping ⁠() {
         println("✅ Running categorizeArticles test")
 
         val articles = listOf(

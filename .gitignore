@@ -20,4 +20,5 @@ components/database-support/src/main/.DS_Store
 components/database-support/src/main/kotlin/.DS_Store
 components/database-support/src/main/kotlin/io/.DS_Store
 databases/.DS_Store
-.vscode/
+.vscode/credentials.json
+credentials.json

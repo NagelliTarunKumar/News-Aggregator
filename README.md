@@ -1,6 +1,7 @@
-# Capstone Starter
+Demo Video of the Project
+[Click Here](https://drive.google.com/file/d/15o3xaQDYTsnhSi4A6woI1eIcAfaDGt2X)
 
-A capstone starter application.
+
 
 [Deployment on Google Cloud](https://collector-service-848125970118.us-central1.run.app/)
 
